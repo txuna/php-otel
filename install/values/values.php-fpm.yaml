@@ -26,8 +26,8 @@ stack:
         subPath: zz-app.ini
         readOnly: true
       - name: config
-        mountPath: /usr/local/etc/php/conf.d/zz-app.ini
-        subPath: zz-app.ini
+        mountPath: /usr/local/etc/php/conf.d/zz-app.conf
+        subPath: zz-app.conf
         readOnly: true
       - name: src
         mountPath: /var/www/html
