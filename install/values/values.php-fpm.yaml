@@ -1,0 +1,31 @@
+# 스택 개별 항목
+stack:
+  nginx:
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+  fpm:
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    autoscailing:
+      enabled: false
+
+# 공통 항목
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 80
+
+livenessProbe: null
+readinessProbe: null

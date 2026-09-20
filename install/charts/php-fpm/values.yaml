@@ -1,0 +1,76 @@
+# 스택 개별 항목
+stack:
+  nginx:
+    image:
+      repository: nginx
+      pullPolicy: IfNotPresent
+      tag: "1.31.6"
+    port: 80
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    # Additional volumeMounts on the output Deployment definition.
+    volumeMounts:
+      - name: config
+        mountPath: /etc/nginx/conf.d/default.conf
+        subPath: nginx-default.conf
+        readOnly: true
+
+  fpm:
+    image:
+      repository: localhost:5001/fpm
+      pullPolicy: Always
+      tag: "latest"
+    port: 9000
+    maxChildren: 15
+    maxRequests: 500
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    autoscailing:
+      enabled: false
+    # Additional volumeMounts on the output Deployment definition.
+    volumeMounts:
+      - name: config
+        mountPath: /usr/local/etc/php/conf.d/zz-app.ini
+        subPath: zz-app.ini
+        readOnly: true
+
+# 공통 항목
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 80
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+livenessProbe: null
+readinessProbe: null
+
+# Additional volumes on the output Deployment definition.
+volumes:
+  - name: config
+    configMap:
+      name: fpm-nginx-config
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

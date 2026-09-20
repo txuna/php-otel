@@ -1,1 +1,8 @@
 # php-otel
+
+## TODO
+
+- [] nginx + php-fpm 볼륨마운트
+- [] nginx + php-fpm configmap 추가 및 연결 확인
+- [] php-fpm otel 연결
+- [] jaeger 배포 및 연동확인

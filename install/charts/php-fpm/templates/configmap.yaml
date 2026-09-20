@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fpm-nginx-config
+  labels:
+    {{- include "php-fpm.labels" . | nindent 4 }}
+data:
+  nginx-default.conf: |
+    server {
+        listen {{ .Values.stack.nginx.port }};
+        server_name _;
+
+        root /var/www/html;
+        index gateway.php;
+
+        location / {
+            try_files $uri /gateway.php$is_args$args;
+        }
+
+        location ~ \.php$ {
+            fastcgi_pass 127.0.0.1:{{ .Values.stack.fpm.port }};
+            fastcgi_split_path_info ^(.+\.php)(/.*)$;
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param PATH_INFO $fastcgi_path_info;
+        }
+    }
+
+  zz-app.conf: |
+    [global]
+    error_log = /proc/self/fd/2
+
+    [www]
+    access.log = /proc/self/fd/2
+    catch_workers_output = yes
+    decorate_workers_output = no
+
+    ; OTEL_* 같은 환경변수를 PHP가 볼 수 있게 한다
+    clear_env = no
+
+    ; 메모리 limit(128Mi)에 맞춰 워커 수를 고정
+    pm = static
+    pm.max_children = {{ .Values.stack.fpm.maxChildren }}
+    pm.max_requests = {{ .Values.stack.fpm.maxRequests }}
+
+  zz-app.ini: |
+    memory_limit = 24M
+    expose_php = Off
+    display_errors = Off
+    log_errors = On
+    error_log = /proc/self/fd/2
