@@ -19,13 +19,36 @@ stack:
         memory: 128Mi
     autoscailing:
       enabled: false
+    # Additional volumeMounts on the output Deployment definition.
+    volumeMounts:
+      - name: config
+        mountPath: /usr/local/etc/php/conf.d/zz-app.ini
+        subPath: zz-app.ini
+        readOnly: true
+      - name: config
+        mountPath: /usr/local/etc/php/conf.d/zz-app.ini
+        subPath: zz-app.ini
+        readOnly: true
+      - name: src
+        mountPath: /var/www/html
 
 # 공통 항목
 replicaCount: 1
 
 service:
-  type: ClusterIP
+  type: NodePort
+  nodePort: 30080
   port: 80
 
 livenessProbe: null
 readinessProbe: null
+
+# Additional volumes on the output Deployment definition.
+volumes:
+  - name: config
+    configMap:
+      name: fpm-nginx-config
+  - name: src
+    hostPath:
+      path: /mnt/src/php-fpm
+      type: Directory

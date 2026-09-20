@@ -11,5 +11,8 @@ spec:
       targetPort: {{ .Values.service.port }}
       protocol: TCP
       name: http
+      {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePort }}
+      nodePort: {{ .Values.service.nodePort }}
+      {{- end }}
   selector:
     {{- include "php-fpm.selectorLabels" . | nindent 4 }}

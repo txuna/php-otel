@@ -43,6 +43,10 @@ stack:
         mountPath: /usr/local/etc/php/conf.d/zz-app.ini
         subPath: zz-app.ini
         readOnly: true
+      - name: config
+        mountPath: /usr/local/etc/php/conf.d/zz-app.ini
+        subPath: zz-app.ini
+        readOnly: true
 
 # 공통 항목
 replicaCount: 1

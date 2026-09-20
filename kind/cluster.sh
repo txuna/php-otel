@@ -19,6 +19,25 @@ set -o errexit
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 cluster_config="${script_dir}/cluster.yaml"
 
+command -v envsubst >/dev/null 2>&1 || {
+  echo "error: envsubst 가 없습니다. brew install gettext" >&2
+  exit 1
+}
+
+env_file="${script_dir}/../.env"
+if [ ! -f "${env_file}" ]; then
+  echo "error: ${env_file} 가 없습니다. cp .env.example .env 후 REPO_ROOT 를 채우세요." >&2
+  exit 1
+fi
+
+# set -a: 이후 대입을 자동 export 한다. envsubst 는 셸 변수가 아니라
+# 환경변수를 읽으므로 export 없이는 빈 문자열로 치환된다.
+set -a
+. "${env_file}"
+set +a
+
+: "${REPO_ROOT:?REPO_ROOT 가 .env 에 설정되지 않았습니다}"
+
 # 클러스터 이름은 cluster.yaml 의 최상위 name 을 단일 출처로 삼는다
 cluster_name=$(sed -n 's/^name:[[:space:]]*//p' "${cluster_config}")
 if [ -z "${cluster_name}" ]; then
@@ -45,7 +64,7 @@ fi
 # https://github.com/kubernetes-sigs/kind/issues/2875
 # https://github.com/containerd/containerd/blob/main/docs/cri/config.md#registry-configuration
 # See: https://github.com/containerd/containerd/blob/main/docs/hosts.md
-kind create cluster --config="${cluster_config}"
+envsubst '${REPO_ROOT}' < "${cluster_config}" | kind create cluster --config=-
 
 # 3. Add the registry config to the nodes
 #

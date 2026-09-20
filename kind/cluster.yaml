@@ -3,9 +3,23 @@ apiVersion: kind.x-k8s.io/v1alpha4
 name: php-otel
 nodes:
   - role: control-plane
+    extraPortMappings:
+      - containerPort: 30080
+        hostPort: 80
+        listenAddress: "127.0.0.1"
+        protocol: TCP
   - role: worker
+    extraMounts:
+      - hostPath: ${REPO_ROOT}/src/php-fpm
+        containerPath: /mnt/src/php-fpm
   - role: worker
+    extraMounts:
+      - hostPath: ${REPO_ROOT}/src/php-fpm
+        containerPath: /mnt/src/php-fpm
   - role: worker
+    extraMounts:
+      - hostPath: ${REPO_ROOT}/src/php-fpm
+        containerPath: /mnt/src/php-fpm
 containerdConfigPatches:
   - |-
     [plugins."io.containerd.grpc.v1.cri".registry]
