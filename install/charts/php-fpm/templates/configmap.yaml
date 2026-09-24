@@ -44,11 +44,20 @@ data:
     pm.max_requests = {{ .Values.stack.fpm.maxRequests }}
 
   zz-app.ini: |
-    memory_limit = 24M
+    memory_limit = 128M
     expose_php = Off
     display_errors = Off
     log_errors = On
     error_log = /proc/self/fd/2
 
-    [opentelemetry]
-    extension=opentelemetry.so
+    ; [opentelemetry]
+    ; extension=opentelemetry.so
+
+    auto_prepend_file = /var/www/html/telemetry.php
+
+    OTEL_PHP_AUTOLOAD_ENABLED="true"
+    OTEL_SERVICE_NAME=your-service-name
+    OTEL_TRACES_EXPORTER=otlp
+    OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+    OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4318
+    OTEL_PROPAGATORS=baggage,tracecontext
