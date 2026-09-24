@@ -1,6 +1,6 @@
 REGISTRY := localhost:5001
 
-.PHONY: cluster-up cluster-down build-base build-fpm
+.PHONY: cluster-up cluster-down build-base build-fpm help
 
 ## 클러스터 생성 부
 cluster-up:
@@ -24,3 +24,12 @@ deploy-fpm:
 
 remove-fpm:
 	@helm uninstall fpm -n fpm
+
+## HELP
+help:
+	@echo "make cluster-up			: 클러스터 생성"
+	@echo "make cluster-down		: 클러스터 삭제"
+	@echo "make build-base			: php-fpm:8.4.7 베이스 이미지 생성"
+	@echo "make build-fpm			: 웹서버 소스 빌드"
+	@echo "make deploy-fpm			: PHP-FPM with Nginx 배포"
+	@echo "make remove-fpm			: PHP-FPM with Nginx 삭제"
