@@ -10,3 +10,13 @@
 
 ### Cilium
 - [] cilium gateway API 배포
+
+### DEP
+
+```bash
+composer require \
+    open-telemetry/sdk \
+    open-telemetry/exporter-otlp \
+    open-telemetry/opentelemetry-auto-curl \
+    open-telemetry/opentelemetry-auto-pdo
+```
