@@ -1,6 +1,6 @@
 REGISTRY := localhost:5001
 
-.PHONY: cluster-up cluster-down build-base build-fpm help
+.PHONY: cluster-up cluster-down build-base build-fpm help deploy-jaeger remove-jaeger repo-add
 
 ## 클러스터 생성 부
 cluster-up:
@@ -25,6 +25,16 @@ deploy-fpm:
 remove-fpm:
 	@helm uninstall fpm -n fpm
 
+deploy-jaeger:
+	@helm upgrade --install jaeger jaegertracing/jaeger -f ./install/values/values.jaeger.yaml -n telemetry --create-namespace
+
+remove-jaeger:
+	@helm uninstall jaeger -n telemetry
+
+## HELP
+repo-add:
+	@helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
+
 ## HELP
 help:
 	@echo "make cluster-up			: 클러스터 생성"
@@ -33,3 +43,6 @@ help:
 	@echo "make build-fpm			: 웹서버 소스 빌드"
 	@echo "make deploy-fpm			: PHP-FPM with Nginx 배포"
 	@echo "make remove-fpm			: PHP-FPM with Nginx 삭제"
+	@echo "make deploy-jaeger		: Jaeger 배포"
+	@echo "make remove-jaeger		: Jaeger 삭제"
+	@echo "make repo-add			: HELM 차트 업데이트"
