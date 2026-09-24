@@ -17,6 +17,6 @@
 composer require \
     open-telemetry/sdk \
     open-telemetry/exporter-otlp \
-    open-telemetry/opentelemetry-auto-curl \
-    open-telemetry/opentelemetry-auto-pdo
+    open-telemetry/opentelemetry-auto-curl --ignore-platform-req=ext-opentelemetry \
+    open-telemetry/opentelemetry-auto-pdo --ignore-platform-req=ext-opentelemetry
 ```
