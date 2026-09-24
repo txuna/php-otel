@@ -56,8 +56,19 @@ data:
     auto_prepend_file = /var/www/html/telemetry.php
 
     OTEL_PHP_AUTOLOAD_ENABLED="true"
-    OTEL_SERVICE_NAME=your-service-name
+    OTEL_SERVICE_NAME=php-otel
     OTEL_TRACES_EXPORTER=otlp
     OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
-    OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4318
+    ;OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4318
+    OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
     OTEL_PROPAGATORS=baggage,tracecontext
+
+    ; 전부 수집(기본은 부모 기반)
+    OTEL_TRACES_SAMPLER=always_on
+    ; span을 즉시 전송 - 요청이 짧은 PHP에서 확인이 빠름
+    OTEL_PHP_TRACES_PROCESSOR=simple
+    ; exporter가 왜 실패했는지 stdout 출력
+    OTEL_LOG_LEVEL=debug
+
+    OTEL_METRICS_EXPORTER=none
+    OTEL_LOGS_EXPORTER=none

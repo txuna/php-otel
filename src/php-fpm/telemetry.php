@@ -21,9 +21,6 @@ class Telemetry {
         $instrumentation ??= new CachedInstrumentation('example');
         $span = $instrumentation->tracer()->spanBuilder('democlass-run')->startSpan();
         Context::storage()->attach($span->storeInContext(Context::getCurrent()));
-
-        echo $class . "\n";
-        echo $function . "\n";
     }
 
     static public function postHook (DemoClass $demo, array $params, $returnValue, ?Throwable $exception) 
