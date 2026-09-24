@@ -60,7 +60,7 @@ data:
     OTEL_TRACES_EXPORTER=otlp
     OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
     ;OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4318
-    OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
+    OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger.telemetry.svc:4318
     OTEL_PROPAGATORS=baggage,tracecontext
 
     ; 전부 수집(기본은 부모 기반)
