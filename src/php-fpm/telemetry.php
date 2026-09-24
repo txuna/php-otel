@@ -10,13 +10,24 @@ require __DIR__ . '/vendor/autoload.php';
 OpenTelemetry\Instrumentation\hook(
     class: DemoClass::class,
     function: 'run',
-    pre: static function (DemoClass $demo, array $params, string $class, string $function, ?string $filename, ?int $lineno) {
+    pre: Telemetry::preHook(...),
+    post: Telemetry::postHook(...),
+);
+
+class Telemetry {
+    static public function preHook(DemoClass $demo, array $params, string $class, string $function, ?string $filename, ?int $lineno) 
+    {
         static $instrumentation;
         $instrumentation ??= new CachedInstrumentation('example');
         $span = $instrumentation->tracer()->spanBuilder('democlass-run')->startSpan();
         Context::storage()->attach($span->storeInContext(Context::getCurrent()));
-    },
-    post: static function (DemoClass $demo, array $params, $returnValue, ?Throwable $exception) {
+
+        echo $class . "\n";
+        echo $function . "\n";
+    }
+
+    static public function postHook (DemoClass $demo, array $params, $returnValue, ?Throwable $exception) 
+    {
         $scope = Context::storage()->scope();
         if (null === $scope) {
             return;
@@ -29,5 +40,5 @@ OpenTelemetry\Instrumentation\hook(
         }
         $span->end();
     }
-);
+}
 
