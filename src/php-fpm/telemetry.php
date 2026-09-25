@@ -7,13 +7,6 @@ use OpenTelemetry\Context\Context;
 
 require __DIR__ . '/vendor/autoload.php';
 
-OpenTelemetry\Instrumentation\hook(
-    class: DemoClass::class,
-    function: 'run',
-    pre: Telemetry::preHook(...),
-    post: Telemetry::postHook(...),
-);
-
 class Telemetry {
     static public function preHook(DemoClass $demo, array $params, string $class, string $function, ?string $filename, ?int $lineno) 
     {
@@ -37,5 +30,11 @@ class Telemetry {
         }
         $span->end();
     }
-}
+};
 
+OpenTelemetry\Instrumentation\hook(
+    class: DemoClass::class,
+    function: 'run',
+    pre: Telemetry::preHook(...),
+    post: Telemetry::postHook(...),
+);
